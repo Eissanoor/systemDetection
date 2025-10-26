@@ -5,47 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Player</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .video-container {
-            max-width: 800px;
+            padding: 0;
             width: 100%;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            background: white;
-            border-radius: 8px;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
         }
-        video {
+        #myVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-radius: 4px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
+            height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
 <body>
-    <div class="video-container">
-        <h1>Video Player</h1>
-        <video id="myVideo" controls autoplay>
-            <source src="1.222.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+    <video id="myVideo" autoplay muted loop>
+        <source src="1.222.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
     <script>
-        // Ensure video plays automatically when the page loads
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('myVideo');
-            video.play().catch(error => {
-                console.log('Auto-play was prevented. Please enable autoplay in your browser settings.');
+            
+            // Try to enter fullscreen
+            function goFullscreen() {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) { /* Safari */
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) { /* IE11 */
+                    video.msRequestFullscreen();
+                }
+            }
+            
+            // Start playing and go fullscreen
+            video.play().then(() => {
+                goFullscreen();
+            }).catch(error => {
+                console.log('Auto-play was prevented. Click on the page to start playback.');
+                // If autoplay is blocked, allow clicking anywhere to start
+                document.body.addEventListener('click', function() {
+                    video.play();
+                    goFullscreen();
+                }, { once: true });
+            });
+            
+            // Handle fullscreen change
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    goFullscreen();
+                }
             });
         });
     </script>
