@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['glove', 'no_glove']
+
+roboflow:
+  workspace: glove-uylxg
+  project: glove-q7czq
+  version: 1
+  license: MIT
+  url: https://universe.roboflow.com/glove-uylxg/glove-q7czq/dataset/1
